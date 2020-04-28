@@ -40,73 +40,41 @@ if ($hassiteconfig) {
             get_string('settings', 'core', null, true));
 
     if ($ADMIN->fulltree) {
-        $page->add(new admin_setting_configcheckbox('local_bbbadm/allowbbb',
+        $page->add(new admin_setting_configcheckbox('local_bbbadm/stopbbb',
                 get_string('bbbdisable', 'local_bbbadm', 'all', true), null,
-		#get_string('allowusing_desc', 'local_bbbadm', null, true),
 	       	0));
-	$page->add(new admin_setting_confightmleditor('local_bbbadm/allowbbbtxt',
+	$page->add(new admin_setting_confightmleditor('local_bbbadm/denybbbtxt',
        		new lang_string('optionalmaintenancemessage', 'admin'), '', ''));
 
-        $page->add(new admin_setting_heading('local_bbbadm/serverconfighead',
-                get_string('serverconfighead', 'local_bbbadm', null, true),
-                ''));
-	$srvlist = bbbadm_get_server_list();
-	foreach($srvlist as $i => $s) {
-	        $page->add(new admin_setting_configcheckbox('local_bbbadm/allowbbbserver_'.$i,
-                get_string('allowusing', 'local_bbbadm', "'".$s[2]."'", true), null,
-		#get_string('allowusing_desc', 'local_bbbadm', null, true), 
-		0));
-	}
-if(0) {
-        // Create document title source widget.
-        $titlesource[STATICPAGE_TITLE_H1] = get_string('documenttitlesourceh1', 'local_bbbadm', null, false);
-                // Don't use string lazy loading here because the string will be directly used and
-                // would produce a PHP warning otherwise.
-        $titlesource[STATICPAGE_TITLE_HEAD] = get_string('documenttitlesourcehead', 'local_bbbadm', null, true);
-        $page->add(new admin_setting_configselect('local_bbbadm/documenttitlesource',
-                get_string('documenttitlesource', 'local_bbbadm', null, true),
-                get_string('documenttitlesource_desc', 'local_bbbadm', null, true),
-                STATICPAGE_TITLE_H1,
-                $titlesource));
-        $page->add(new admin_setting_configselect('local_bbbadm/documentheadingsource',
-                get_string('documentheadingsource', 'local_bbbadm', null, true),
-                get_string('documentheadingsource_desc', 'local_bbbadm', null, true),
-                STATICPAGE_TITLE_H1,
-                $titlesource));
-        $page->add(new admin_setting_configselect('local_bbbadm/documentnavbarsource',
-                get_string('documentnavbarsource', 'local_bbbadm', null, true),
-                get_string('documentnavbarsource_desc', 'local_bbbadm', null, true),
-                STATICPAGE_TITLE_H1,
-                $titlesource));
-
-        // Apache rewrite.
-        $page->add(new admin_setting_heading('local_bbbadm/apacherewriteheading',
-                get_string('apacherewrite', 'local_bbbadm', null, true),
-                ''));
-
-        // Create apache rewrite control widget.
-        $page->add(new admin_setting_configcheckbox('local_bbbadm/apacherewrite',
-                get_string('apacherewrite', 'local_bbbadm', null, true),
-                get_string('apacherewrite_desc', 'local_bbbadm', null, true),
-                0));
-
-        // Force login.
-        $page->add(new admin_setting_heading('local_bbbadm/forceloginheading',
-                get_string('forcelogin', 'local_bbbadm', null, true),
-                ''));
-
-        // Create force login widget.
-        $forceloginmodes[0] = get_string('yes', 'core', null, true);
-        $forceloginmodes[1] = get_string('no', 'core', null, true);
-        $forceloginmodes[2] = get_string('forceloginglobal', 'local_bbbadm', null, false);
-                // Don't use string lazy loading here because the string will be directly used and
-                // would produce a PHP warning otherwise.
-        $page->add(new admin_setting_configselect('local_bbbadm/forcelogin',
-                get_string('forcelogin', 'local_bbbadm', null, true),
-                get_string('forcelogin_desc', 'local_bbbadm', null, true),
-                $forceloginmodes[2],
-		$forceloginmodes));
-}
+	$srvlist = \mod_bigbluebuttonbn\locallib\config::server_list();
+	if(!$srvlist ) {
+    		$page = new admin_settingpage('local_bbbadm_settings',
+		            get_string('emptylist', 'local_bbbadm', null, true));
+	} else
+	    foreach($srvlist as $i => $s) {
+	        $page->add(new admin_setting_heading('local_bbbadm/serverconfighead_'.$i,
+        	        get_string('serverconfighead', 'local_bbbadm',"'".$s[2]."'" , true),
+                	''));
+	        $page->add(new admin_setting_configcheckbox('local_bbbadm/denybbbserver_'.$i,
+                	get_string('denyusing', 'local_bbbadm', null , true),
+			get_string('denyusing_desc', 'local_bbbadm', null, true), 
+			0));
+	        $page->add(new admin_setting_configcheckbox('local_bbbadm/autobbbserver_'.$i,
+                	get_string('autousing', 'local_bbbadm', null , true),
+			get_string('autousing_desc', 'local_bbbadm', null, true), 
+			0));
+	        $page->add(new admin_setting_configint_range('local_bbbadm/connlimitserver_'.$i,
+			get_string('connlimit', 'local_bbbadm', null , true), 
+			'( 2 - 300 )', 200, PARAM_INT, 3 , 1, 300));
+	        $page->add(new admin_setting_configtext('local_bbbadm/costbbbserver_'.$i,
+			get_string('costusing', 'local_bbbadm', null , true), 
+			get_string('costusing_desc', 'local_bbbadm', null, true), 
+			'0', PARAM_INT, 3 ));
+	        $page->add(new admin_setting_configtext('local_bbbadm/multbbbserver_'.$i,
+			get_string('multserver', 'local_bbbadm', null , true), 
+			get_string('multserver_desc', 'local_bbbadm', null, true), 
+			'100', PARAM_INT, 3 ));
+	    }
     }
 
     // Add settings page to navigation category.
@@ -118,6 +86,4 @@ if(0) {
             new moodle_url('/local/bbbadm/serverinfo.php'),
 	    'moodle/site:config');
     $ADMIN->add('local_bbbadm', $page);
-
-    // Add pagelist page to navigation category.
 }

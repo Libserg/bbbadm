@@ -28,13 +28,23 @@ $string['pluginname'] = 'BBB administration';
 $string['pagenotfound'] = 'Page not found';
 $string['privacy:metadata'] = 'The static pages plugin provides extended functionality to Moodle admins, but does not store any personal data.';
 $string['processcontent'] = 'Process content';
-$string['settingspagelistnofiles'] = 'settingspagelistnofiles';
 $string['serverinfopage'] = 'Server Status Information';
 $string['forcelogin'] = 'forcelogin';
 $string['forcelogin_desc'] = 'forcelogin_desc';
 $string['noconfiguredservers'] = 'Empty list of servers.';
-$string['serverconfighead'] = 'Servers config';
+$string['serverconfighead'] = '{$a} settings';
+$string['emptylist'] = 'No configured BBB-servers!';
 $string['bbbdisable'] = 'Disable use of all BBB servers';
 #$string['allowusing_desc'] = 'Disable create meeting on this server';
-$string['allowusing'] = 'Disable use {$a}';
-#$string['allowusing_desc'] = 'Disable create meeting on this server';
+$string['denyusing'] = 'Deny a meetings creating';
+$string['denyusing_desc'] = 'Disable create meeting on this server';
+$string['autousing'] = 'Deny autoselect';
+$string['autousing_desc'] = 'Exclude from automatic server selection';
+$string['costusing'] = 'Server priority';
+$string['costusing_desc'] = ''; #'Higher is worse';
+$string['multserver'] = 'Server multiplier';
+$string['multserver_desc'] = 'The server rating is calculated by the formula: (load rating) * (server multiplier)/100 + (server usage cost).<br>'.
+	'The "load rating" is calculated by the BBB server itself.<br>'.
+	'When creating a meeting, a server with a minimum load rating will be selected.';
+$string['connlimit'] = 'Common limit of server connections';
+$string['connlimit_desc'] = 'Must be < 300';

@@ -26,7 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_bbbadm';
 $plugin->version = 2020021400;
-$plugin->release = 'v3.5-a0';
+$plugin->release = 'v3.5-1';
 #$plugin->requires = 2019111800;
 $plugin->requires = 2018051711;
 $plugin->maturity = MATURITY_STABLE;
+$plugin->dependencies = array('mod_bigbluebuttonbn'=>2019101001);
