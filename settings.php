@@ -66,14 +66,14 @@ if ($hassiteconfig) {
 	        $page->add(new admin_setting_configint_range('local_bbbadm/connlimitserver_'.$i,
 			get_string('connlimit', 'local_bbbadm', null , true), 
 			'( 2 - 300 )', 200, PARAM_INT, 3 , 1, 300));
-	        $page->add(new admin_setting_configtext('local_bbbadm/costbbbserver_'.$i,
+	        $page->add(new admin_setting_configint_range('local_bbbadm/costbbbserver_'.$i,
 			get_string('costusing', 'local_bbbadm', null , true), 
 			get_string('costusing_desc', 'local_bbbadm', null, true), 
-			'0', PARAM_INT, 3 ));
-	        $page->add(new admin_setting_configtext('local_bbbadm/multbbbserver_'.$i,
+			'0', PARAM_INT, 3, 0, 1000));
+	        $page->add(new admin_setting_configint_range('local_bbbadm/multbbbserver_'.$i,
 			get_string('multserver', 'local_bbbadm', null , true), 
 			get_string('multserver_desc', 'local_bbbadm', null, true), 
-			'100', PARAM_INT, 3 ));
+			'100', PARAM_INT, 4, 0, 1000 ));
 	    }
     }
 

@@ -113,9 +113,9 @@ class admin_setting_configint_range extends admin_setting_configtext {
 		return $parentvalidation;
 	if($data == '') $data = $this->get_defaultsetting();
         if ($this->minval != false && intval($data) < $this->minval)
-            return get_string('validateerror', 'admin');
+            return get_string('range_error_min', 'local_bbbadm', $this->minval . ' - '. $this->maxval);
         if ($this->maxval != false && intval($data) > $this->maxval)
-            return get_string('validateerror', 'admin');
+            return get_string('range_error_max', 'local_bbbadm', $this->minval . ' - '. $this->maxval);
         return true; // No max length check needed.
     }
 }

@@ -48,3 +48,5 @@ $string['multserver_desc'] = 'The server rating is calculated by the formula: (l
 	'When creating a meeting, a server with a minimum load rating will be selected.';
 $string['connlimit'] = 'Common limit of server connections';
 $string['connlimit_desc'] = 'Must be < 300';
+$string['range_error_min'] = 'The valid value must be in range {$a}';
+$string['range_error_max'] = 'The valid value must be in range {$a}';
