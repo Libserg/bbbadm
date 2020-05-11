@@ -53,24 +53,29 @@ if ($hassiteconfig) {
 	} else
 	    foreach($srvlist as $i => $s) {
 	        $page->add(new admin_setting_heading('local_bbbadm/serverconfighead_'.$i,
-        	        get_string('serverconfighead', 'local_bbbadm',"'".$s[2]."'" , true),
-                	''));
-	        $page->add(new admin_setting_configcheckbox('local_bbbadm/denybbbserver_'.$i,
+        	        get_string('serverconfighead', 'local_bbbadm',"'".$s['server_name']."'" , true),
+			''));
+		if(!isset($s['denybbbserver']))
+	            $page->add(new admin_setting_configcheckbox('local_bbbadm/denybbbserver_'.$i,
                 	get_string('denyusing', 'local_bbbadm', null , true),
 			get_string('denyusing_desc', 'local_bbbadm', null, true), 
 			0));
-	        $page->add(new admin_setting_configcheckbox('local_bbbadm/autobbbserver_'.$i,
+		if(!isset($s['autobbbserver']))
+	            $page->add(new admin_setting_configcheckbox('local_bbbadm/autobbbserver_'.$i,
                 	get_string('autousing', 'local_bbbadm', null , true),
 			get_string('autousing_desc', 'local_bbbadm', null, true), 
 			0));
-	        $page->add(new admin_setting_configint_range('local_bbbadm/connlimitserver_'.$i,
+		if(!isset($s['connlimitserver']))
+	            $page->add(new admin_setting_configint_range('local_bbbadm/connlimitserver_'.$i,
 			get_string('connlimit', 'local_bbbadm', null , true), 
 			'( 2 - 300 )', 200, PARAM_INT, 3 , 1, 300));
-	        $page->add(new admin_setting_configint_range('local_bbbadm/costbbbserver_'.$i,
+		if(!isset($s['costbbbserver']))
+	            $page->add(new admin_setting_configint_range('local_bbbadm/costbbbserver_'.$i,
 			get_string('costusing', 'local_bbbadm', null , true), 
 			get_string('costusing_desc', 'local_bbbadm', null, true), 
 			'0', PARAM_INT, 3, 0, 1000));
-	        $page->add(new admin_setting_configint_range('local_bbbadm/multbbbserver_'.$i,
+		if(!isset($s['multbbbserver']))
+	            $page->add(new admin_setting_configint_range('local_bbbadm/multbbbserver_'.$i,
 			get_string('multserver', 'local_bbbadm', null , true), 
 			get_string('multserver_desc', 'local_bbbadm', null, true), 
 			'100', PARAM_INT, 4, 0, 1000 ));
