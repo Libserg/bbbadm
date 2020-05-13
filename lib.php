@@ -37,7 +37,7 @@ function bbbadm_show_meetings(&$l,&$mi) {
 	foreach($mi as $i=>$m) {
 		$mt[] = new html_table_row(array(
 			$m['StartTime'],
-			$m['LMS'].' '.$m['Name'],
+			'<b>'.$m['LMS'].'</b> '.$m['Course'].' '.$m['Name'],
 			$m['Moderators'],
 			$m['Videos'],
 			$m['Users']
