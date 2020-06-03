@@ -69,7 +69,7 @@ if($srvlist !== false) {
 	foreach($srvlist as $i=>$s) {
 	    $si = bbb_get_server_info($i);
 	    if($si[0] > 0) {
-		$l[] = new html_table_row(array($s['server_name'],$s['server_url'], $si['RC'], $si['MC'], $si['VC'], $si['LC']));
+		$l[] = new html_table_row(array($s['server_name'],$s['server_url'], intval($si['RC']), $si['MC'], $si['VC'], $si['LC']));
 		if(isset($si['info']))
 			bbbadm_show_meetings($l,$si['info']);
 	    } else {
