@@ -67,6 +67,7 @@ if($srvlist !== false) {
         $htmltable->size = array('8em', '*', '3em','3em','3em','3em');
 	$l = array(array());
 	foreach($srvlist as $i=>$s) {
+	    if(!$i) continue;
 	    $si = bbb_get_server_info($i);
 	    if($si[0] > 0) {
 		$l[] = new html_table_row(array($s['server_name'],$s['server_url'], intval($si['RC']), $si['MC'], $si['VC'], $si['LC']));
@@ -120,3 +121,40 @@ class admin_setting_configint_range extends admin_setting_configtext {
     }
 }
 
+function bbb_rrd_monitor() {
+	global $CFG;
+	if(!($CFG->bbb_rrd ?? 0)) return '';
+	$srvlist = \mod_bigbluebuttonbn\locallib\config::server_list();
+
+	$cachedir = bbb_server_cache_dir();
+	$rrd_dir = $cachedir.'/bbb_rrd';
+	if(!is_dir($rrd_dir))
+		mkdir($rrd_dir);
+	if(!is_dir($rrd_dir)) return '';
+
+	$ctm = time();
+
+	if($srvlist === false) return '';
+	$result = [];
+	$gen_all = false;
+	$rrd_all = [];
+	foreach($srvlist as $i=>$s) {
+		if(!$i) continue;
+		$rrdfile = $cachedir."/server_$i.rrd";
+		$rrdhtml = $rrd_dir."/server_$i.html";
+		if(!file_exists($rrdfile)) continue;
+		$rrd_all[] = $rrdfile;
+		if(!file_exists($rrdhtml) || filemtime($rrdhtml) <= filemtime($rrdfile)) {
+			$gen_all = true;
+			$output = shell_exec("bash {$CFG->libdir}/../local/bbbadm/gen_rrd.sh $rrd_dir $rrdfile $i");
+			file_put_contents($rrdhtml,$output);
+		}
+		$result[] = '<a href="'.$CFG->wwwroot."/local/bbbadm/file.php/server_$i.html\">server $i</a>";
+	}
+	if($gen_all || !file_exists($rrd_dir."/server_all.html")) {
+		$output = shell_exec("bash {$CFG->libdir}/../local/bbbadm/gen_rrd_all.sh $rrd_dir ".implode(' ',$rrd_all));
+		file_put_contents($rrd_dir."/server_all.html",$output);
+		$result[] = '<a href="'.$CFG->wwwroot."/local/bbbadm/file.php/server_all.html\">ALL</a>";
+	}
+	return implode(' ',$result);
+}

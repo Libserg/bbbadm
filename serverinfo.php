@@ -46,6 +46,6 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($title);
 
 echo bbbadm_get_servers_info();
-
+echo bbb_rrd_monitor();
 // Finish page.
 echo $OUTPUT->footer();
