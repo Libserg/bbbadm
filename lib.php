@@ -50,6 +50,13 @@ function bbbadm_show_meetings(&$l,&$mi) {
 	$l[] = new html_table_row(array('&nbsp;',$t));
 }
 
+function bbbadm_server_select_sort($a,$b) {
+    $va = intval($a[1]) ?? 0;
+    $vb = intval($b[1]) ?? 0;
+    if($va != $vb) return $va - $vb;
+    return strcmp($a[2],$b[2]);
+}
+
 function bbbadm_get_servers_info() {
 global $CFG;
 // Initialize HTML output.
@@ -66,8 +73,16 @@ if($srvlist !== false) {
 	$htmltable->head = array('Name','URL','Load ratio','Rooms','Videos','View');
         $htmltable->size = array('8em', '*', '3em','3em','3em','3em');
 	$l = array(array());
-	foreach($srvlist as $i=>$s) {
-	    if(!$i) continue;
+        foreach($srvlist as $k=>$s) {
+                if(!$k) continue;
+                $order[$k] = [$k,$s['show_order'] ?? 0,$s['server_name']];
+        }
+        uasort($order,'bbbadm_server_select_sort');
+        foreach($order as $sr) {
+            $i = $sr[0];
+            if(!$i) continue;
+            $s = $srvlist[$i];
+
 	    $si = bbb_get_server_info($i);
 	    if($si[0] > 0) {
 		$l[] = new html_table_row(array($s['server_name'],$s['server_url'], intval($si['RC']), $si['MC'], $si['VC'], $si['LC']));
@@ -154,7 +169,8 @@ function bbb_rrd_monitor() {
 	if($gen_all || !file_exists($rrd_dir."/server_all.html")) {
 		$output = shell_exec("bash {$CFG->libdir}/../local/bbbadm/gen_rrd_all.sh $rrd_dir ".implode(' ',$rrd_all));
 		file_put_contents($rrd_dir."/server_all.html",$output);
-		$result[] = '<a href="'.$CFG->wwwroot."/local/bbbadm/file.php/server_all.html\">ALL</a>";
 	}
+	if(file_exists($rrd_dir."/server_all.html"))
+		$result[] = '<a href="'.$CFG->wwwroot."/local/bbbadm/file.php/server_all.html\">ALL</a>";
 	return implode(' ',$result);
 }

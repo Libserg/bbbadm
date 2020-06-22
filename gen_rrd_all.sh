@@ -28,7 +28,7 @@ declare -a LINES
 #LINES=()
 LINES+=("--font" "DEFAULT:10:Courier")
 #CLRS=([0]="0000FF" [1]="007F00" [2]="FF0000" [3]="FFFF00" [4]="FF00FF" [5]="7Fff8F" [6]="FF7f40" [7]="1F7f40" [8]="ff1010" )
-CLRS=([0]="0000FF" [2]="007F00" [1]="FF0000" [3]="FFFF00" [4]="FF00FF" [5]="7Fff8F" [6]="FF7f40" [7]="1F7f40" [8]="ff1010" )
+CLRS=([0]="0000FF" [1]="FF0000" [2]="00FF00" [3]="FFFF00" [4]="FF00FF" [5]="7Fff8F" [6]="FF7f40" [7]="1F7f40" [8]="ff1010" )
 # LAST file.rrd par1 ...
 function std_def {
         local X="$1"
@@ -128,11 +128,13 @@ for i in ${LINES[@]}; do L1+=($i); done
 L1+=("--imginfo" "&nbsp;<IMG SRC=\"%s\" WIDTH=\"%lu\" HEIGHT=\"%lu\"/>")
 L1+=($S1)
 
+C1=""
 I=1
 for D in ${DR[@]}; do
-  j="AREA:MC${I}#${CLRS[$I]}40:"
+  j="AREA:MC${I}#${CLRS[$I]}90:"
   [ "$I" != "1" ] && j="$j:STACK"
   L1+=($j)
+  C1="$C1 $I ${CLRS[$I]}"
   I=$[$I+1]
 done
 
@@ -144,6 +146,7 @@ for D in ${DR[@]}; do
   L1+=($j)
   j=''; [ "$I" = "$LL" ] && j="\l"
   L1+=("GPRINT:MC$I:LAST:%3.0lf${j}")
+  C1="$C1 $I ${CLRS[$I]}"
   I=$[$I+1]
 done
 
@@ -153,11 +156,13 @@ L2+=("--imginfo" "&nbsp;<IMG SRC=\"%s\" WIDTH=\"%lu\" HEIGHT=\"%lu\"/>")
 L2+=($S2)
 L2+=("GPRINT:LC:LAST:Total users %3.0lf")
 
+C2=""
 I=1
 for D in ${DR[@]}; do
-  j="AREA:LC${I}#${CLRS[$I]}40:"
+  j="AREA:LC${I}#${CLRS[$I]}90:"
   [ "$I" != "1" ] && j="$j:STACK"
   L2+=($j)
+  C2="$C2 $I ${CLRS[$I]}"
   I=$[$I+1]
 done
 
@@ -168,6 +173,7 @@ for D in ${DR[@]}; do
   L2+=($j)
   j=''; [ "$I" = "$LL" ] && j="\l"
   L2+=("GPRINT:LC$I:LAST:%3.0lf${j}")
+  C2="$C2 $I ${CLRS[$I]}"
   I=$[$I+1]
 done
 
@@ -186,6 +192,7 @@ N="$SRV"
   rrdtool graph "$V/srv${SRV}-h8.png" --start -$[24*3600] -t "$N 24 Hour" -x "$XGRD8" $COMMON "${L1[@]}" 
   echo '<br>'
   rrdtool graph "$V/srv${SRV}-d.png" --start -$[7*24*3600] -t "$N 1 Week" -x "$XGRD168" $COMMON "${L1[@]}" 
+#  echo "$C1"
   echo '<hr>'
 
   rrdtool graph "$V/srv${SRV}u-h2.png" --start -$[4*3600] -t "$N 4 Hour" -x "$XGRD4A" $COMMON "${L2[@]}" 
@@ -194,6 +201,7 @@ N="$SRV"
   echo '<br>'
   rrdtool graph "$V/srv${SRV}u-d.png" --start -$[7*24*3600] -t "$N 1 Week" -x "$XGRD168" $COMMON "${L2[@]}" 
   echo '<br>'
+#  echo "$C2"
 
   echo ' </html>'
 exit 0
